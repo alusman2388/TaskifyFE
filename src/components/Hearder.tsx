@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { logout } from "./Auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CgProfile } from "react-icons/cg";
@@ -34,22 +34,6 @@ const Hearder = () => {
     })();
   }, []);
 
-  const handleTask = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/get-all-tasks",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   return (
     <>
       <header className="px-3" style={{ background: "#934662" }}>
@@ -63,19 +47,15 @@ const Hearder = () => {
             </a>
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li>
-                <a href="#" className="nav-link px-2 text-white">
+                <Link to="/" className="nav-link px-2 text-white">
                   Dashboard
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="#" className="nav-link px-2 text-white">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#" className="nav-link px-2 text-white">
-                  Pricing
-                </a>
+                <Link to="/table" className="nav-link px-2 text-white">
+                  Table
+                </Link>
               </li>
               <li>
                 <a href="#" className="nav-link px-2 text-white">

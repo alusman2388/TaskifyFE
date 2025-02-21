@@ -11,6 +11,7 @@ import App from "./routes/App.tsx";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Dashboard from "./components/Dashboard.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Table from "./components/Table.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,16 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <Dashboard />,
+          },
+        ],
+      },
+      {
+        path: "/table",
+        element: <ProtectedRoute children={undefined} />, // Protects all child routes
+        children: [
+          {
+            path: "",
+            element: <Table />,
           },
         ],
       },
