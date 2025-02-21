@@ -12,6 +12,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import Dashboard from "./components/Dashboard.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Table from "./components/Table.tsx";
+import AddTaskCard from "./components/AddTaskCard.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,16 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <Table />,
+          },
+        ],
+      },
+      {
+        path: "/add-new-task",
+        element: <ProtectedRoute children={undefined} />, // Protects all child routes
+        children: [
+          {
+            path: "",
+            element: <AddTaskCard />,
           },
         ],
       },

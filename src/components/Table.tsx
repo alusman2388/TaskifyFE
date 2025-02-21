@@ -1,8 +1,9 @@
 import axios from "axios";
+import { format, formatDistanceToNow } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { GrDocumentUpdate } from "react-icons/gr";
 import { MdDeleteOutline } from "react-icons/md";
-import { MdIncompleteCircle } from "react-icons/md";
+import UpdateTask from "./UpdateTask";
 
 interface Tasks {
   id: number;
@@ -18,14 +19,38 @@ interface Tasks {
 const Table = () => {
   const token = sessionStorage.getItem("token");
   const [tasks, setTasks] = useState([]);
-  const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(date);
+  const formatTimeAgo = (timestamp: string | number | Date) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+
+    const diffInHours = (now - date) / (1000 * 60 * 60);
+
+    if (diffInHours < 24) {
+      return formatDistanceToNow(date, { addSuffix: true }); // e.g., "10 minutes ago"
+    } else if (diffInHours < 48 && now.getDate() - date.getDate() === 1) {
+      return "Yesterday";
+    } else {
+      return format(date, "dd MMM yyyy"); // e.g., "12 Feb 2025"
+    }
   };
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/del-task/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setTasks(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -37,26 +62,41 @@ const Table = () => {
             },
           }
         );
+
         setTasks(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     })();
-  });
+  }, []);
   return (
     <>
-      <div className="">
-        <table className="table table-striped">
+      <div className="card border-0 shadow rounded-4 mb-5 bg-body-tertiary rounded">
+        <table className="table table-hover table-borderless">
           <thead>
             <tr>
-              <th scope="col">SL.No</th>
-              <th scope="col">Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Priority</th>
-              <th scope="col">Created At</th>
-              <th scope="col">Updated At</th>
-              <th scope="col">Completed At</th>
-              <th scope="col">Action</th>
+              <th className="text-body-tertiary" scope="col">
+                SL.No
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Title
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Description
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Priority
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Last Updated
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Completed
+              </th>
+              <th className="text-body-tertiary fw-medium" scope="col">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -73,24 +113,33 @@ const Table = () => {
                   <td className="text-info">Low</td>
                 )}
 
-                <td>{formatDate(item.createdAt)}</td>
                 {item.updatedAt != null ? (
                   <td>
-                    <td>{formatDate(item.updatedAt)}</td>
+                    <td>{formatTimeAgo(item.updatedAt)}</td>
                   </td>
                 ) : (
-                  <td>Not Updated</td>
+                  <td>No Updates</td>
                 )}
 
                 {item.completedAt != null ? (
-                  <td>{formatDate(item.completedAt)}</td>
+                  <td>{formatTimeAgo(item.completedAt)}</td>
                 ) : (
-                  <td>Not completed</td>
+                  <td>In Progress</td>
                 )}
                 <td>
                   <div className="d-flex gap-2">
-                    <GrDocumentUpdate size={30} color="#EB5B00" />
-                    <MdDeleteOutline size={30} color="Red" />
+                    <GrDocumentUpdate
+                      data-bs-toggle="modal"
+                      data-bs-target="#updatetask"
+                      size={30}
+                      color="#EB5B00"
+                    />
+                    <UpdateTask />
+                    <MdDeleteOutline
+                      onClick={() => handleDelete(item.id)}
+                      size={30}
+                      color="Red"
+                    />
                   </div>
                 </td>
               </tr>
