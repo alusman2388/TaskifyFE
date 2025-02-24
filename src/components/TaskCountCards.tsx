@@ -44,7 +44,7 @@ const TaskCountCards: React.FC = () => {
     <>
       <div className="card w-50">
         <div className="card-body">
-          <div className="d-flex justify-content-md-between align-content-stretch flex-wrap flex-md-nowrap  gap-5 ms-md-5">
+          <div className="d-flex justify-content-md-between flex-wrap flex-md-nowrap gap-5 ms-md-5">
             <div className="row gap-2">
               <div>
                 <MdOutlineBatchPrediction

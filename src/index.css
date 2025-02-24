@@ -10,7 +10,9 @@
 .col-text {
   width: 20px;
 }
-
+.tab-res {
+  overflow-x: auto;
+}
 /* sign up page styles */
 .background-radial-gradient {
   background-color: hsl(218, 41%, 15%);
@@ -60,4 +62,17 @@
   position: absolute;
   top: 20%;
   right: 0%;
+}
+.add-task {
+  position: absolute;
+  top: 60%;
+  width: 15vw;
+}
+.add-card {
+  width: 30vw;
+}
+@media only screen and (max-width: 600px) {
+  .add-card {
+    width: 70vw;
+  }
 }

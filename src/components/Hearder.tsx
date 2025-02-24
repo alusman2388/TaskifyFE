@@ -27,7 +27,7 @@ const Hearder = () => {
           },
         });
         setUserData(response.data);
-        console.log("Fetched Data:", userData);
+        //console.log("Fetched Data:", userData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -36,7 +36,7 @@ const Hearder = () => {
 
   return (
     <>
-      <header className="px-3" style={{ background: "#934662" }}>
+      <header className="px-3" style={{ background: "#AA60C8" }}>
         <div className="">
           <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a

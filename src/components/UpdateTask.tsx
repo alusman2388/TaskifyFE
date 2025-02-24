@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
-const UpdateTask = () => {
+const UpdateTask = ({ id }) => {
   const token = sessionStorage.getItem("token");
 
   const [updateTask, setUpdateTask] = useState({
@@ -14,12 +14,24 @@ const UpdateTask = () => {
     setUpdateTask({ ...updateTask, [e.target.name]: e.target.value });
     console.log(updateTask);
   };
+  useEffect(() => {
+    const response = axios
+      .get(`http://localhost:8080/api/get-task/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      // setUpdateTask();
+      .then((response) => setUpdateTask(response.data))
+      .catch((error) => console.log(error));
+    console.log(updateTask);
+  }, []);
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault(); // Prevents page reloa
+    e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/add-task",
+      const response = await axios.put(
+        `http://localhost:8080/api/update-task/${id}`,
         updateTask,
         {
           headers: {
@@ -40,7 +52,7 @@ const UpdateTask = () => {
       }
     } catch (error: any) {
       alert(
-        "Adding new task Failed: " +
+        "updating task Failed: " +
           (error.response?.data?.message || error.message)
       );
     }
@@ -59,7 +71,7 @@ const UpdateTask = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="staticBackdropLabel">
-              Modal title
+              Modal title{id}
             </h1>
             <button
               type="button"
@@ -148,8 +160,12 @@ const UpdateTask = () => {
             >
               Close
             </button>
-            <button type="button" className="btn btn-primary">
-              Understood
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="btn btn-primary"
+            >
+              Update
             </button>
           </div>
         </div>

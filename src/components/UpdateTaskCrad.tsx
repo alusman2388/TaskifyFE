@@ -1,43 +1,86 @@
 import axios from "axios";
-import React, { ChangeEvent, EventHandler } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+interface Task {
+  title: string;
+  description: string;
+  priority: string;
+  completed?: boolean;
+}
 
-const AddTaskCard = () => {
+const UpdateTaskCrad = () => {
+  const location = useLocation();
+  const id = location.state.id;
   const token = sessionStorage.getItem("token");
   const naviagte = useNavigate();
-  const [task, setTask] = React.useState({
+  const [updateTask, setUpdateTask] = useState<Task>({
     title: "",
     description: "",
     priority: "",
+    completed: false,
   });
+  const handleSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUpdateTask((prevTask) => ({
+      ...prevTask,
+      completed: event.target.checked, // Update completed directly
+    }));
+  };
   const handleTaskData = (e: ChangeEvent<HTMLInputElement>) => {
-    setTask((prevTask) => ({ ...prevTask, [e.target.name]: e.target.value }));
+    setUpdateTask((prevTask) => ({
+      ...prevTask,
+      [e.target.name]: e.target.value,
+    }));
   };
   const handleCancle = () => {
     naviagte("/");
-    setTask({ title: "", description: "", priority: "" });
+    setUpdateTask({
+      title: "",
+      description: "",
+      priority: "",
+      completed: false,
+    });
   };
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/get-task/${id}`,
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUpdateTask(response.data);
+      } catch (error: any) {
+        console.log(error);
+      }
+    })();
+  }, []);
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/add-task",
-        task,
+      const response = await axios.put(
+        `http://localhost:8080/api/update-task/${id}`,
+        updateTask,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (response.status == 200 || response.status == 201) {
-        alert("Task added successfully");
+      console.log("hihihih", response.data);
+      if (response.status == 200) {
+        alert("Task updated successfully");
         naviagte("/");
-        setTask({ title: "", description: "", priority: "" });
+        setUpdateTask({ title: "", description: "", priority: "" });
       }
     } catch (error: any) {
       // Handle Axios error properly
       if (axios.isAxiosError(error)) {
         alert(
-          "SignUp Failed: " + (error.response?.data?.message || error.message)
+          "update Failed: " + (error.response?.data?.message || error.message)
         );
       } else {
         alert("An unexpected error occurred.");
@@ -48,9 +91,8 @@ const AddTaskCard = () => {
     <div className="container d-flex justify-content-center mt-4">
       <div className="card shadow bg-body-tertiary add-card rounded">
         <div className="card-body">
-          <h5 className="card-title text-center">Add New Task</h5>
+          <h5 className="card-title text-center">Update Task</h5>
           <form>
-            {/* 2 column grid layout with text inputs for the first and last names */}
             <div className="row">
               <div data-mdb-input-init className="form-outline mb-4 ">
                 <input
@@ -58,7 +100,7 @@ const AddTaskCard = () => {
                   id="form3Example1"
                   className="form-control"
                   name="title"
-                  value={task.title}
+                  value={updateTask.title}
                   onChange={(e) => handleTaskData(e)}
                   required
                 />
@@ -67,14 +109,13 @@ const AddTaskCard = () => {
                 </label>
               </div>
             </div>
-            {/* Email input */}
             <div data-mdb-input-init className="form-outline mb-4">
               <input
                 type="text"
                 id="form3Example3"
                 className="form-control"
                 name="description"
-                value={task.description}
+                value={updateTask.description}
                 onChange={(e) => handleTaskData(e)}
                 required
               />
@@ -89,7 +130,7 @@ const AddTaskCard = () => {
                 id="floatingSelect"
                 aria-label="Floating label select example"
                 name="priority"
-                value={task.priority}
+                value={updateTask.priority}
                 onChange={(e: any) => handleTaskData(e)}
                 required
               >
@@ -103,6 +144,23 @@ const AddTaskCard = () => {
 
               <label className="form-label" htmlFor="form3Example4">
                 Task Priority
+              </label>
+            </div>
+            <div data-mdb-input-init className="form-outline mb-4">
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault"
+                  name="completed"
+                  checked={updateTask.completed}
+                  onChange={(e) => handleSwitchChange(e)}
+                />
+              </div>
+
+              <label className="form-label" htmlFor="form3Example3">
+                Mark task as completed
               </label>
             </div>
           </form>
@@ -120,7 +178,7 @@ const AddTaskCard = () => {
               className="btn text-white"
               style={{ backgroundColor: "#AA60C8" }}
             >
-              Add task
+              Update Task
             </button>
           </div>
         </div>
@@ -129,4 +187,4 @@ const AddTaskCard = () => {
   );
 };
 
-export default AddTaskCard;
+export default UpdateTaskCrad;

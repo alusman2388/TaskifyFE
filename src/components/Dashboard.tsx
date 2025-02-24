@@ -1,28 +1,17 @@
 import TaskCountCards from "./TaskCountCards";
-import DIsplayTaskCards from "./DIsplayTaskCards";
 import Table from "./Table";
-import { Link } from "react-router-dom";
-import AddTaskCard from "./AddTaskCard";
+import DIsplayTaskCards from "./DIsplayTaskCards";
+import AddTaskButton from "./AddTaskButton";
 
 const Dashboard = () => {
   return (
     <>
       <div className=" container">
-        <div className=" d-flex justify-content-md-center  flex-wrap  gap-5 mt-5">
-          <button
-            type="button"
-            className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-          >
-            Add New Task +
-          </button>
-          <AddTaskCard />
+        <div className=" d-flex justify-content-center gap-5 my-5 ">
           <TaskCountCards />
+          <AddTaskButton />
         </div>
-
         <Table />
-        {/* <DIsplayTaskCards /> */}
       </div>
     </>
   );

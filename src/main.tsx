@@ -13,6 +13,7 @@ import Dashboard from "./components/Dashboard.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Table from "./components/Table.tsx";
 import AddTaskCard from "./components/AddTaskCard.tsx";
+import UpdateTaskCrad from "./components/UpdateTaskCrad.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -45,6 +46,16 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <AddTaskCard />,
+          },
+        ],
+      },
+      {
+        path: "/update-task",
+        element: <ProtectedRoute children={undefined} />, // Protects all child routes
+        children: [
+          {
+            path: "",
+            element: <UpdateTaskCrad />,
           },
         ],
       },
