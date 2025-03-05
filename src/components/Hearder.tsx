@@ -58,6 +58,16 @@ const Hearder = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/table" className="nav-link px-2 text-white">
+                  Pending Tasks
+                </Link>
+              </li>
+              <li>
+                <Link to="/table" className="nav-link px-2 text-white">
+                  Completed Tasks
+                </Link>
+              </li>
+              <li>
                 <a href="#" className="nav-link px-2 text-white">
                   FAQs
                 </a>

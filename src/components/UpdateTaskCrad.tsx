@@ -74,7 +74,12 @@ const UpdateTaskCrad = () => {
       if (response.status == 200) {
         alert("Task updated successfully");
         naviagte("/");
-        setUpdateTask({ title: "", description: "", priority: "" });
+        setUpdateTask({
+          title: "",
+          description: "",
+          priority: "",
+          completed: false,
+        });
       }
     } catch (error: any) {
       // Handle Axios error properly
